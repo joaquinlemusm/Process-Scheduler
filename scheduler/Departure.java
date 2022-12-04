@@ -10,10 +10,10 @@ import scheduler.scheduling.policies.RR;
 import scheduler.scheduling.policies.PP;
 
 public class Departure extends Thread {
-    private Policy policy;
-    private double quantum;
+    private final Policy policy;
+    private final double quantum;
     private boolean run;
-    private String processor;
+    private final String processor;
     private static int completed = 0;
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_GREEN = "\u001B[32m";
@@ -47,7 +47,8 @@ public class Departure extends Thread {
                         System.out.println();
                         try {
                             Thread.sleep(time);
-                        } catch (Exception e) { 
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         System.out.println("El " + this.processor + " ha terminando de atender a " + s);
                         ++completed;
@@ -75,7 +76,8 @@ public class Departure extends Thread {
                 System.out.println();
                 try {
                     Thread.sleep(quantumSleep);
-                } catch (Exception e) { 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 double remainder = quantumProcessTime - quantum;
                 if (remainder > 0) {
@@ -111,14 +113,13 @@ public class Departure extends Thread {
                 System.out.println();
                 try {
                     Thread.sleep(time);
-                } catch (Exception e) { 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 System.out.println("El " + this.processor + " ha terminando de atender a " + s);
                 ++completed;
                 System.out.println("\n" + ANSI_GREEN + "Se han atendido " + completed + " procesos en total." + ANSI_RESET);
-                System.out.println();            
-                //System.out.println(this.policy.toString());
-                // System.out.println(cola4.toString());
+                System.out.println();
             }
         } catch (NullPointerException npe) {
             System.out.println(ANSI_YELLOW + "¡No hay procesos en espera! \n" + ANSI_RESET);

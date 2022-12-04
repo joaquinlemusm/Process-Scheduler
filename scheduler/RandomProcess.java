@@ -9,10 +9,10 @@ import scheduler.processing.SimpleProcess;
 import java.util.Random;
 
 public class RandomProcess {
-    private double arithmeticTime;
-    private double ioTime;
-    private double loopTime;
-    private double conditionalTime;
+    private final double arithmeticTime;
+    private final double ioTime;
+    private final double loopTime;
+    private final double conditionalTime;
     private static int id = 0;
 
     public RandomProcess(double arithmeticTime, double ioTime, double conditionalTime, double loopTime) {
@@ -24,29 +24,17 @@ public class RandomProcess {
     
     public SimpleProcess pickProcess() {
         Random random = new Random();
-        SimpleProcess process = null;
         int max = 4;
         int min = 1;
         int opt = random.nextInt((max-min)+1)+min;
 
-        switch(opt) {
-            case 1:
-                ArithmeticProcess arithmeticProcess = new ArithmeticProcess(++id, this.arithmeticTime);
-                process = arithmeticProcess;
-                break;
-            case 2:
-                InputOutputProcess ioProcess = new InputOutputProcess(++id, this.ioTime);
-                process = ioProcess;
-                break;
-            case 3:
-                LoopProcess loopProcess = new LoopProcess(++id, this.loopTime);
-                process = loopProcess;
-                break;
-            case 4:
-                ConditionalProcess conditionalProcess = new ConditionalProcess(++id, this.conditionalTime);
-                process = conditionalProcess;
-                break;
-        }
+        SimpleProcess process = switch(opt) {
+            case 1 -> process = new ArithmeticProcess(++id, this.arithmeticTime);
+            case 2 -> process = new InputOutputProcess(++id, this.ioTime);
+            case 3 -> process = new LoopProcess(++id, this.loopTime);
+            case 4 -> process = new ConditionalProcess(++id, this.conditionalTime);
+            default -> throw new IllegalArgumentException("Unexpected value: " + opt);
+        };
 
         return process;
     }
@@ -105,20 +93,4 @@ public class RandomProcess {
         return quantumTime;
     }
 
-    public void newQuantumTime(SimpleProcess s, double remainingTime) {
-        double newQuantum = 0;
-        if (s instanceof ArithmeticProcess) {
-            ArithmeticProcess ap = (ArithmeticProcess)s;
-            newQuantum = ap.setQuantumTime(remainingTime);
-        } else if (s instanceof InputOutputProcess) {
-            InputOutputProcess io = (InputOutputProcess)s;
-            newQuantum = io.setQuantumTime(remainingTime);
-        } else if (s instanceof ConditionalProcess) {
-            ConditionalProcess cp = (ConditionalProcess)s;
-            newQuantum = cp.setQuantumTime(remainingTime);
-        } else if (s instanceof LoopProcess) {
-            LoopProcess lp = (LoopProcess)s;
-            newQuantum = lp.setQuantumTime(remainingTime);
-        }
-    }
 }

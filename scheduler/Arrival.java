@@ -9,13 +9,13 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Arrival extends Thread {
-    private Policy policy;
+    private final Policy policy;
     private static int id = 0;
-    private String inputTime;
-    private double arithmeticTime;
-    private double ioTime;
-    private double loopTime;
-    private double conditionalTime;
+    private final String inputTime;
+    private final double arithmeticTime;
+    private final double ioTime;
+    private final double loopTime;
+    private final double conditionalTime;
     public boolean run;
 
     public Arrival(Policy policy, String inputTime, double arithmeticTime, double ioTime, double loopTime, double conditionalTime) {
@@ -45,33 +45,29 @@ public class Arrival extends Thread {
                     System.out.println(this.policy.toString());
                     System.out.println();
                 }
-                try {
-                    Thread.sleep(setInputTime(this.inputTime));
-                } catch (Exception e) {
-                }         
             } else {
                 this.policy.add(currentProcess);
                 synchronized (this.policy) {
                     System.out.println("Procesos en espera: " + this.policy.toString());
                     System.out.println();
                 }
-                try {
-                    Thread.sleep(setInputTime(this.inputTime));
-                } catch (Exception e) {
-                }         
-            }  
+            }
+            try {
+                Thread.sleep(setInputTime(this.inputTime));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public int setInputTime(String time) {
         Random random = new Random();
-        String[] input = time.split("\\-");
+        String[] input = time.split("-");
         double startD = Double.parseDouble(input[0]);
         double endD = Double.parseDouble(input[1]);
         int start = (int)(startD *1000);
         int end = (int)(endD *1000);
-        int access = random.nextInt((end - start) + 1) + start;
-        return access;
+        return random.nextInt((end - start) + 1) + start;
     }
 
     public void exit() {

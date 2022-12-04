@@ -10,11 +10,11 @@ import java.io.IOException;
 
 
 public class Exit extends Thread {
-    private Arrival arrival;
-    private Policy policy;
-    private Departure departure1;
-    private Departure departure2;
-    private BufferedReader input;
+    private final Arrival arrival;
+    private final Policy policy;
+    private final Departure departure1;
+    private final Departure departure2;
+    private final BufferedReader input;
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_RESET = "\u001B[0m";
 
@@ -49,7 +49,9 @@ public class Exit extends Thread {
                         break;
                     }
                 }
-            } catch(IOException io) {}
+            } catch(IOException io) {
+                io.printStackTrace();
+            }
         }
         synchronized (this.policy) {
             System.out.println(ANSI_BLUE + "\nQuedaron " + this.policy.size() + " procesos en cola.\n" + ANSI_RESET);
